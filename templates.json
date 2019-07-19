@@ -1,0 +1,8 @@
+{
+  "tpl": {
+    "redux": {
+      "gitUrl": "git@github.com:zhuyunhe/hello_world.git",
+      "branch": "master"
+    }
+  }
+}

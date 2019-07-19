@@ -1,0 +1,28 @@
+{
+  "name": "my-cli",
+  "version": "1.0.0",
+  "description": "zhuyunhe cli",
+  "main": "index.js",
+  "bin": {
+    "mycli": "bin/xianyun"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "author": "zhuyunhe",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.20.0",
+    "inquirer": "^6.5.0",
+    "ora": "^3.4.0",
+    "prompt": "^1.0.0",
+    "rimraf": "^2.6.3",
+    "uid": "0.0.2"
+  }
+}
