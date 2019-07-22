@@ -140,7 +140,7 @@ const downloadAndGenerate =  (branch, gitUrl) => {
         process.exit()
       }
 
-      console.log(chalk.green('\n √ git clone completed!'))
+      spinner.succeed('√ git clone completed!')
       exec(`rm -rf ${tmp}/.git`, (error) => {
         if (error) {
           console.log(error)
@@ -148,11 +148,8 @@ const downloadAndGenerate =  (branch, gitUrl) => {
         }
         console.log(chalk.white('\n Start generating...'))
         // 得到文件目录树
-        let fileTree = generate(tmp, './');
-        fileTree.unshift({
-          name: 'clone所有文件',
-          all: true
-        })
+        let fileTree = generate(tmp, []);
+        
         console.log(fileTree)
         //选择复制某个文件夹下所有文件，或单独复制某个文件
         const selectFile = (fileTree) => {
@@ -167,18 +164,29 @@ const downloadAndGenerate =  (branch, gitUrl) => {
             console.log(fileNode)
             if(fileNode &&fileNode.length > 0){
               fileNode = fileNode[0]
-              if (fileNode.all === 'clone所有文件') {
-                clone(tmp, './');
+              if (fileNode.all === true) {
+                cloneFile(tmp, './');
+                process.exit()
               }
               // 选择了某个文件夹
-              else if (fileNode.isFile) {
-
+              else if (!fileNode.isFile) {
+                let filedir = path.join(tmp, fileNode.name)
+                fileTree = generate(filedir, [])
               } else {
-
+                let file = path.join(tmp, fileNode.name)
+                fs.copyFile(file, path.resolve('./'), (error) => {
+                  if(error){
+                    console.log('copy 文件失败')
+                    console.log(error)
+                  }
+                  process.exit()
+                })
               }
             } else {
               process.exit()
             }
+          }).catch(error => {
+            console.log(error)
           })
         }
         selectFile(fileTree)
@@ -189,7 +197,7 @@ const downloadAndGenerate =  (branch, gitUrl) => {
   }
 }
 
-// clone文件
+// clone文件夹
 const cloneFile = ( srcPath, tarPath, filter = [] ) => {
   try {
     let files = fs.readdirSync(srcPath)
@@ -220,7 +228,7 @@ const cloneFile = ( srcPath, tarPath, filter = [] ) => {
 }
 
 // 生成目标仓库一级目录
-const generate = ( srcPath, tarPath, filter = [] ) => {
+const generate = ( srcPath, filter = [] ) => {
   try {
     let files = fs.readdirSync(srcPath)
     let fileTree = []
@@ -231,10 +239,9 @@ const generate = ( srcPath, tarPath, filter = [] ) => {
         let stats = fs.statSync(filedir)
         let isFile = stats.isFile()
         if (isFile) {
-          const destPath = path.join(tarPath, fileName);
           fileTree.push({
             name: fileName,
-            isFile: false
+            isFile: true
           })
           // fs.copyFile(filedir, destPath, (error) => {})
         }
@@ -242,13 +249,16 @@ const generate = ( srcPath, tarPath, filter = [] ) => {
         else {
           fileTree.push({
             name: fileName,
-            isFile: true
+            isFile: false
           })
-          let tarFiledir = path.join(tarPath, fileName);
           // fs.mkdir(tarFiledir, (error) => {});
-          generate(filedir, tarFiledir, filter)                 // 递归
+          generate(filedir, filter)                 // 递归
         }
       }
+    })
+    fileTree.unshift({
+      name: 'clone所有文件',
+      all: true
     })
     return fileTree
   } catch (error) {
