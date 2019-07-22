@@ -165,7 +165,7 @@ const downloadAndGenerate =  (branch, gitUrl) => {
             if(fileNode &&fileNode.length > 0){
               fileNode = fileNode[0]
               if (fileNode.all === true) {
-                cloneFile(tmp, './');
+                cloneFileDir(tmp, './');
                 process.exit()
               }
               // 选择了某个文件夹
@@ -173,8 +173,8 @@ const downloadAndGenerate =  (branch, gitUrl) => {
                 let filedir = path.join(tmp, fileNode.name)
                 fileTree = generate(filedir, [])
               } else {
-                let file = path.join(tmp, fileNode.name)
-                fs.copyFile(file, path.resolve('./'), (error) => {
+                let file = path.resolve(path.join(tmp, fileNode.name))
+                fs.copyFile(file, path.resolve(`./${fileNode.name}`), (error) => {
                   if(error){
                     console.log('copy 文件失败')
                     console.log(error)
@@ -198,7 +198,7 @@ const downloadAndGenerate =  (branch, gitUrl) => {
 }
 
 // clone文件夹
-const cloneFile = ( srcPath, tarPath, filter = [] ) => {
+const cloneFileDir = ( srcPath, tarPath, filter = [] ) => {
   try {
     let files = fs.readdirSync(srcPath)
     files.forEach(function (fileName) {
@@ -215,7 +215,7 @@ const cloneFile = ( srcPath, tarPath, filter = [] ) => {
         else {
           let tarFiledir = path.join(tarPath, fileName);
           fs.mkdir(tarFiledir, (error) => {});
-          cloneFile(filedir, tarFiledir, filter)                 // 递归
+          cloneFileDir(filedir, tarFiledir, filter)                 // 递归
         }
       }
     })
@@ -257,7 +257,7 @@ const generate = ( srcPath, filter = [] ) => {
       }
     })
     fileTree.unshift({
-      name: 'clone所有文件',
+      name: 'clone所有文件到当前目录下',
       all: true
     })
     return fileTree
