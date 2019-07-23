@@ -29,7 +29,7 @@ module.exports = () => {
 
   const downloadAndGenerate = (branch, gitUrl) => {
     //    var tmp = os.tmpdir() + '/peon-template-' + uid();
-    var tmp = __dirname + './peon-template-' + uid();
+    var tmp = './peon-template-' + uid();
     var base_temp = tmp                 // 保留原始临时文件目录
     var spinner = ora('下载模板仓库');
     spinner.start();
@@ -39,7 +39,6 @@ module.exports = () => {
       exec(cmdStr, (error, stdout, stderr) => {
         // 进程结束时，删除临时文件目录
         process.on('exit', function (error) {
-          console.log('tmp: ' + tmp)
           if(error){
             console.log(error)
           }

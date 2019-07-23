@@ -1,7 +1,7 @@
 {
   "name": "xianyun",
-  "version": "1.0.0",
-  "description": "zhuyunhe cli",
+  "version": "1.0.1",
+  "description": "xianyun cli",
   "main": "index.js",
   "bin": {
     "xianyun": "bin/xianyun"
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "cli"
+    "cli", "quick start"
   ],
   "author": "zhuyunhe",
   "license": "ISC",

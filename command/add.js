@@ -9,7 +9,7 @@ module.exports = () => {
     {
       type: 'input',
       name: 'templateName',
-      message: "你要使用的模板名称?",
+      message: "你要添加的模板名称?",
       validate: function (value) {
         var pass = value.match(
           /[-_a-zA-Z0-9]/i
